@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {filter, map, Observable} from 'rxjs';
 import {Category, Difficulty, ApiQuestion, Question, Results} from './data.models';
 
 @Injectable({
@@ -8,28 +8,27 @@ import {Category, Difficulty, ApiQuestion, Question, Results} from './data.model
 })
 export class QuizService {
 
-  private API_URL = "https://opentdb.com/";
+  private API_URL = "https://opentdb.com";
   private latestResults!: Results;
 
   constructor(private http: HttpClient) {
   }
 
   getAllCategories(): Observable<Category[]> {
-    return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "api_category.php").pipe(
+    return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "/api_category.php").pipe(
       map(res => this.transformCategories(res.trivia_categories)),
     );
   }
 
   createQuiz(categoryId: string, difficulty: Difficulty): Observable<Question[]> {
-    return this.http.get<{ results: ApiQuestion[] }>(
-        `${this.API_URL}/api.php?amount=5&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`)
+    return this.getQuizQuestions(5, categoryId, difficulty);
+  }
+
+  getIsolatedQuestion(categoryId: string, difficulty: Difficulty): Observable<Question> {
+    return this.getQuizQuestions(1, categoryId, difficulty)
       .pipe(
-        map(res => {
-          const quiz: Question[] = res.results.map(q => (
-            {...q, all_answers: [...q.incorrect_answers, q.correct_answer].sort(() => (Math.random() > 0.5) ? 1 : -1)}
-          ));
-          return quiz;
-        })
+        filter(questions => questions.length > 0),
+        map(questions => questions[0]),
       );
   }
 
@@ -44,6 +43,19 @@ export class QuizService {
 
   getLatestResults(): Results {
     return this.latestResults;
+  }
+
+  private getQuizQuestions(numberOfQuestions: number, categoryId: string, difficulty: Difficulty): Observable<Question[]> {
+    return this.http.get<{ results: ApiQuestion[] }>(
+        `${this.API_URL}/api.php?amount=${numberOfQuestions}&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`)
+      .pipe(
+        map(res => {
+          const quiz: Question[] = res.results.map(q => (
+            {...q, all_answers: [...q.incorrect_answers, q.correct_answer].sort(() => (Math.random() > 0.5) ? 1 : -1)}
+          ));
+          return quiz;
+        })
+      );
   }
 
   private transformCategories(originalCategories: Category[]): Category[] {

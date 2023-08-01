@@ -18,10 +18,10 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
   public subCategories: Category[] = [];
   public formGroup: FormGroup<QuizForm>;
 
+  public selectedCategory: Category | null = null;
+  public selectedSubCategory: Category | null = null;
+  
   private unsubscribe = new Subject<void>();
-  private selectedCategory: Category | null = null;
-  private selectedSubCategory: Category | null = null;
-
   constructor(
     protected quizService: QuizService,
     protected readonly formBuild: FormBuilder,
@@ -43,6 +43,17 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
       .subscribe(guid => this.subCategoryChanged(guid));
   }
 
+  private resetSubCategory(): void {
+    this.selectedSubCategory = null;
+    this.formGroup.controls.subCategory.setValue('');
+
+    if (this.subCategories.length > 0) {
+      this.formGroup.controls.subCategory.enable();
+    } else {
+      this.formGroup.controls.subCategory.disable();
+    }
+  }
+
   ngOnInit(): void {
     this.subscribeFormHandlers();
 
@@ -59,14 +70,7 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
   mainCategoryChanged(categoryGuid: string | null): void {
     this.selectedCategory = this.categories.find(c => c.guid === categoryGuid)!;
     this.subCategories = this.selectedCategory.sub_category;
-    this.selectedSubCategory = null;
-    this.formGroup.controls.subCategory.setValue('');
-
-    if (this.subCategories.length > 0) {
-      this.formGroup.controls.subCategory.enable();
-    } else {
-      this.formGroup.controls.subCategory.disable();
-    }
+    this.resetSubCategory();
   }
 
   subCategoryChanged(categoryGuid: string | null): void {
@@ -78,10 +82,9 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const category = this.selectedSubCategory?.name || this.selectedCategory?.name || '';
+    const category = this.selectedSubCategory?.id || this.selectedCategory?.id || '';
     const difficulty: Difficulty = this.formGroup.value.difficulty as Difficulty;
 
-    console.log(category, difficulty);
-    this.questions$ = this.quizService.createQuiz(category, difficulty);
+    this.questions$ = this.quizService.createQuiz(category.toString(), difficulty);
   }
 }

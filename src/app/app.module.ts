@@ -9,6 +9,7 @@ import {QuizMakerComponent} from './quiz-maker/quiz-maker.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { QuestionComponent } from './question/question.component';
 import { AnswersComponent } from './answers/answers.component';
+import { CategorySelectorComponent } from './category-selector/category-selector.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AnswersComponent } from './answers/answers.component';
     QuizMakerComponent,
     QuizComponent,
     QuestionComponent,
-    AnswersComponent
+    AnswersComponent,
+    CategorySelectorComponent
   ],
   imports: [
     BrowserModule,

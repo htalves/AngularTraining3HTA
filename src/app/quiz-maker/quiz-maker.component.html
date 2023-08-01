@@ -1,22 +1,10 @@
 <div class="row">
   <div class="col-sm-11">
-    <form [formGroup]="formGroup">
+    <form [formGroup]="formGroup" class="form-container">
 
       <ng-container *ngIf="categories.length !== 0; else loading">
-        <select [formControlName]="'category'">
-          <option [value]="category.guid" *ngFor="let category of categories">
-            {{category.name}}
-          </option>
-        </select>
-
-        <ng-container *ngIf="subCategories.length !== 0">
-          <select [formControlName]="'subCategory'">
-            <option [value]="category.guid" *ngFor="let category of subCategories">
-              {{category.name}}
-            </option>
-          </select>
-        </ng-container>
-       
+        <app-category-selector [formControlName]="'category'" [categories]="categories"></app-category-selector>
+        <app-category-selector *ngIf="subCategories.length !== 0" [formControlName]="'subCategory'" [categories]="subCategories"></app-category-selector>
       </ng-container>
       
       <select [formControlName]="'difficulty'">
@@ -30,10 +18,9 @@
         class="primary"
         [disabled]="formGroup.invalid"
         (click)="createQuiz()">Create</button>
-
-        <pre>{{ formGroup.value | json }}</pre>
     </form>
   </div>
+  <pre>{{ formGroup.value | json }}</pre>
 
 </div>
 <div class="row">

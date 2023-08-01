@@ -69,7 +69,7 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
 
   mainCategoryChanged(categoryGuid: string | null): void {
     this.selectedCategory = this.categories.find(c => c.guid === categoryGuid)!;
-    this.subCategories = this.selectedCategory.sub_category;
+    this.subCategories = this.selectedCategory?.sub_category || [];
     this.resetSubCategory();
   }
 

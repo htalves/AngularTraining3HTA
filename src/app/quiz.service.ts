@@ -66,21 +66,20 @@ export class QuizService {
     originalCategories.forEach(parentCategory => {
       const categorySplitResult = parentCategory.name.split(': ');
       const hasSubCategories = categorySplitResult.length >= 2;
-      const guid = crypto.randomUUID();
-
+      
       if (hasSubCategories) {
         const mainCategoryName = categorySplitResult[0];
-        const categoryProcessed: Category = { ...parentCategory, name: categorySplitResult[1], guid };
+        const categoryProcessed: Category = { ...parentCategory, name: categorySplitResult[1], guid: crypto.randomUUID() };
         const existingCategoryIndex = categories.findIndex(c => c.name === mainCategoryName);
-      
+        
         if (existingCategoryIndex >= 0)
         {
           categories[existingCategoryIndex].sub_category.push(categoryProcessed);
         } else {
-          categories.push({ guid, name: mainCategoryName, id: null, sub_category: [categoryProcessed] });
+          categories.push({ guid: crypto.randomUUID(), name: mainCategoryName, id: null, sub_category: [categoryProcessed] });
         }
       } else {
-        categories.push({ ...parentCategory, sub_category: [], guid });
+        categories.push({ ...parentCategory, sub_category: [], guid: crypto.randomUUID() });
       }
     })
 

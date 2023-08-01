@@ -12,6 +12,12 @@ describe('QuestionComponent', () => {
     });
     fixture = TestBed.createComponent(QuestionComponent);
     component = fixture.componentInstance;
+    component.question = {
+      question: 'Is this test OK?',
+      correct_answer: 'Always',
+      incorrect_answers: ['Never', 'Random', 'On Tuesdays'],
+      all_answers: ['Always,', 'Never', 'Random', 'On Tuesdays'],
+    };
     fixture.detectChanges();
   });
 

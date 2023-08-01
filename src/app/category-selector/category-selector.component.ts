@@ -1,6 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Category } from '../data.models';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+type DataItem = { label: string, guid: string };
 
 @Component({
   selector: 'app-category-selector',
@@ -21,7 +23,7 @@ export class CategorySelectorComponent implements ControlValueAccessor {
   public onChange: any = () => {};
   public onTouch: any = () => {};
   public selectedName: string = '';
-  public filteredCategories: Category[] = [];
+  public filteredData: DataItem[] = [];
   
   public writeValue(categoryId: string): void {
     // Not needed to the exercise, we don't set value adhoc of the form control
@@ -39,9 +41,16 @@ export class CategorySelectorComponent implements ControlValueAccessor {
   public filter(event: Event, triggerChange: boolean): void {
     const input = event.currentTarget as HTMLInputElement;
     const originalCategories = (this.categories ?? []);
-    this.filteredCategories = input.value.length === 0
+    const filteredCategories = input.value.length === 0
       ? originalCategories
       : originalCategories.filter(c => c.name.toLocaleLowerCase().includes(input.value.toLocaleLowerCase()));
+      
+    this.filteredData = filteredCategories.map(c => {
+      const label = input.value.length === 0
+        ? c.name
+        : c.name.replace(new RegExp(`${input.value}`, 'gi'), `<b>$&</b>`);
+      return { label, guid: c.guid };
+    })
     
     if (triggerChange) {
       const matchingCategory = originalCategories.find(c => c.name.toLocaleLowerCase() === input.value.toLocaleLowerCase());
@@ -49,9 +58,10 @@ export class CategorySelectorComponent implements ControlValueAccessor {
     }
   }
 
-  public itemSelect(category: Category): void {
+  public itemSelect(guid: string): void {
+    const category = this.categories!.find(c => c.guid === guid)!;
     this.selectedName = category.name;
-    this.filteredCategories = [];
+    this.filteredData = [];
     this.onChange(category.guid);
   }
 }

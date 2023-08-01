@@ -16,7 +16,7 @@ export class QuizService {
 
   getAllCategories(): Observable<Category[]> {
     return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "api_category.php").pipe(
-      map(res => res.trivia_categories)
+      map(res => this.transformCategories(res.trivia_categories)),
     );
   }
 
@@ -44,5 +44,34 @@ export class QuizService {
 
   getLatestResults(): Results {
     return this.latestResults;
+  }
+
+  private transformCategories(originalCategories: Category[]): Category[] {
+    // const categoriesToSplit = ['Entertainment', 'Science'];
+
+    const categories: Category[] = [];
+
+    originalCategories.forEach(parentCategory => {
+      const categorySplitResult = parentCategory.name.split(': ');
+      const hasSubCategories = categorySplitResult.length >= 2;
+      const guid = crypto.randomUUID();
+
+      if (hasSubCategories) {
+        const mainCategoryName = categorySplitResult[0];
+        const categoryProcessed: Category = { ...parentCategory, name: categorySplitResult[1], guid };
+        const existingCategoryIndex = categories.findIndex(c => c.name === mainCategoryName);
+      
+        if (existingCategoryIndex >= 0)
+        {
+          categories[existingCategoryIndex].sub_category.push(categoryProcessed);
+        } else {
+          categories.push({ guid, name: mainCategoryName, id: null, sub_category: [categoryProcessed] });
+        }
+      } else {
+        categories.push({ ...parentCategory, sub_category: [], guid });
+      }
+    })
+
+    return categories;
   }
 }

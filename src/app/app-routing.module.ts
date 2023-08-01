@@ -8,7 +8,6 @@ import {QuizService} from './quiz.service';
 const routes: Routes = [
   {
     path: "result", component: AnswersComponent,
-    title: 'ng-cert-nba-htalves',
     resolve: {
       data: () => inject(QuizService).getLatestResults()
     }

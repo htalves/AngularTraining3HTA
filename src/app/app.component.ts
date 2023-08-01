@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +6,5 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public title: string | undefined;
-
-  constructor(activatedRoute: ActivatedRoute) {
-    activatedRoute.title.subscribe(title => this.title = title);
-  }
+  public title = 'ng-cert-nba-htalves';
 }

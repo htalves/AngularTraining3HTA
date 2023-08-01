@@ -1,21 +1,44 @@
 <div class="row">
   <div class="col-sm-11">
-    <select #category id="categorySelect">
-      <option>Select category</option>
-      <option [value]="category.id" *ngFor="let category of categories$ | async">
-        {{category.name}}
-      </option>
-    </select>
-    <select #difficulty id="difficultySelect">
-      <option>Select difficulty</option>
-      <option>Easy</option>
-      <option>Medium</option>
-      <option>Hard</option>
-    </select>
-    <button class="primary" id="createBtn" (click)="createQuiz(category.value, difficulty.value)">Create</button>
+    <form [formGroup]="formGroup">
+
+      <ng-container *ngIf="categories.length !== 0; else loading">
+        <select [formControlName]="'category'">
+          <option [value]="category.guid" *ngFor="let category of categories">
+            {{category.name}}
+          </option>
+        </select>
+
+        <ng-container *ngIf="subCategories.length !== 0">
+          <select [formControlName]="'subCategory'">
+            <option [value]="category.guid" *ngFor="let category of subCategories">
+              {{category.name}}
+            </option>
+          </select>
+        </ng-container>
+       
+      </ng-container>
+      
+      <select [formControlName]="'difficulty'">
+        <option>Select difficulty</option>
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+      </select>
+
+      <button
+        class="primary"
+        (click)="createQuiz()">Create</button>
+
+        <pre>{{ formGroup.value | json }}</pre>
+    </form>
   </div>
 
 </div>
 <div class="row">
    <app-quiz [questions]="questions$ | async" ></app-quiz>
 </div>
+
+<ng-template #loading>
+  <i>Loading Categories...</i>
+</ng-template>

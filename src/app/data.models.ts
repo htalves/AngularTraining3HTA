@@ -1,6 +1,8 @@
 export interface Category {
-  id: number;
+  guid: string;
+  id: number | null;
   name: string;
+  sub_category: Category[];
 }
 
 export interface ApiQuestion {

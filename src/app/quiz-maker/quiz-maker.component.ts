@@ -14,7 +14,7 @@ export class QuizMakerComponent {
   questions$!: Observable<Question[]>;
 
   constructor(protected quizService: QuizService) {
-    this.categories$ = quizService.getAllCategories()
+    this.categories$ = quizService.getAllCategories();
   }
 
   createQuiz(cat: string, difficulty: string): void {

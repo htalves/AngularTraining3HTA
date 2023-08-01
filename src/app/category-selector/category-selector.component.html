@@ -1,0 +1,8 @@
+<section>
+    <input type="text" (keyup)="filter($event, true)" class="input" [placeholder]="placeholder" [(ngModel)]="selectedName" (focus)="filter($event, false)">
+    <ul class="list" *ngIf="filteredCategories.length > 0">
+        <li *ngFor="let category of filteredCategories" class="list__item" (click)="itemSelect(category)">
+            {{category.name}}
+        </li>
+    </ul>
+</section>

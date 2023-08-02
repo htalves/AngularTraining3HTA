@@ -4,6 +4,7 @@ import {Observable, Subject, takeUntil} from 'rxjs';
 import {QuizService} from '../quiz.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { QuizForm } from '../models/quiz-form.model';
+import { DataItem } from '../models/data-item.model';
 
 @Component({
   selector: 'app-quiz-maker',
@@ -14,8 +15,11 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
 
   questions$!: Observable<Question[]>;
 
-  public categories: Category[] = [];
-  public subCategories: Category[] = [];
+  private categories: Category[] = [];
+  private subCategories: Category[] = [];
+
+  public categoriesDataList: DataItem[] = [];
+  public subCategoriesDataList: DataItem[] = [];
   public formGroup: FormGroup<QuizForm>;
 
   public selectedCategory: Category | null = null;
@@ -59,7 +63,10 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
 
     this.quizService.getAllCategories()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(categories => this.categories = categories);
+      .subscribe(categories => {
+        this.categories = categories;
+        this.categoriesDataList = this.categories.map(c => ({ label: c.name, guid: c.guid }));
+      });
   }
 
   ngOnDestroy(): void {
@@ -70,6 +77,8 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
   mainCategoryChanged(categoryGuid: string | null): void {
     this.selectedCategory = this.categories.find(c => c.guid === categoryGuid)!;
     this.subCategories = this.selectedCategory?.sub_category || [];
+    this.subCategoriesDataList = this.subCategories.map(c => ({ label: c.name, guid: c.guid }));
+
     this.resetSubCategory();
   }
 

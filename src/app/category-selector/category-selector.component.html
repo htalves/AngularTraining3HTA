@@ -1,7 +1,0 @@
-<section>
-    <input type="text" (keyup)="filter($event, true)" class="input" [placeholder]="placeholder" [(ngModel)]="selectedName" (focus)="filter($event, false)">
-    <ul class="list" *ngIf="filteredData.length > 0">
-        <li *ngFor="let data of filteredData; index as i" class="list__item" (click)="itemSelect(data.guid)" [innerHtml]="data.label">
-        </li>
-    </ul>
-</section>

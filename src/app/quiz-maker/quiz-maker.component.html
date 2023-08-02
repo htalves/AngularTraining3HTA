@@ -2,9 +2,9 @@
   <div class="col-sm-11">
     <form [formGroup]="formGroup" class="form-container">
 
-      <ng-container *ngIf="categories.length !== 0; else loading">
-        <app-category-selector [formControlName]="'category'" [categories]="categories"></app-category-selector>
-        <app-category-selector *ngIf="subCategories.length !== 0" [formControlName]="'subCategory'" [categories]="subCategories"></app-category-selector>
+      <ng-container *ngIf="categoriesDataList.length !== 0; else loading">
+        <app-list-selector [formControlName]="'category'" [items]="categoriesDataList" [placeholder]="'Select Category...'"></app-list-selector>
+        <app-list-selector *ngIf="subCategoriesDataList.length !== 0" [formControlName]="'subCategory'" [items]="subCategoriesDataList" [placeholder]="'Select SubCategory...'"></app-list-selector>
       </ng-container>
       
       <select [formControlName]="'difficulty'">

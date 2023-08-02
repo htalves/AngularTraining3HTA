@@ -20,8 +20,6 @@
         (click)="createQuiz()">Create</button>
     </form>
   </div>
-  <pre>{{ formGroup.value | json }}</pre>
-
 </div>
 <div class="row">
    <app-quiz [questions]="questions$ | async" [category]="selectedSubCategory || selectedCategory" [difficulty]="formGroup.value.difficulty!"></app-quiz>

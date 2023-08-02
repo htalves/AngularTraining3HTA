@@ -1,7 +1,0 @@
-<section>
-    <input type="text" (keyup)="filter(true)" class="input" [placeholder]="placeholder" [(ngModel)]="selectedName" (focus)="filter(false)">
-    <ul class="list" *ngIf="filteredDataViewModel.length > 0">
-        <li *ngFor="let data of filteredDataViewModel; index as i" class="list__item" (click)="itemSelect(data.guid)" [innerHtml]="data.label">
-        </li>
-    </ul>
-</section>

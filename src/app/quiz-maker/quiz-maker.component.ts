@@ -50,13 +50,14 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
 
   private resetSubCategory(): void {
     this.selectedSubCategory = null;
-    this.formGroup.controls.subCategory.setValue('');
+    this.formGroup.controls.subCategory.setValue('', { emitEvent: false });
 
     if (this.subCategories.length > 0) {
       this.formGroup.controls.subCategory.enable();
     } else {
       this.formGroup.controls.subCategory.disable();
     }
+
   }
 
   ngOnInit(): void {

@@ -59,12 +59,10 @@ export class QuizService {
   }
 
   private transformCategories(originalCategories: Category[]): Category[] {
-    // const categoriesToSplit = ['Entertainment', 'Science'];
-
     const categories: Category[] = [];
 
     originalCategories.forEach(parentCategory => {
-      const categorySplitResult = parentCategory.name.split(': ');
+      const categorySplitResult = parentCategory.name?.split(': ');
       const hasSubCategories = categorySplitResult.length >= 2;
       
       if (hasSubCategories) {

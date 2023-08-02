@@ -38,11 +38,11 @@ export class QuizComponent {
   }
 
   wasSwapped(questionIndex: number) {
-    if (!this.category || !this.difficulty) {
+    if (!this.category?.id || !this.difficulty) {
       return;
     }
 
-    this.quizService.getIsolatedQuestion(this.category.id!.toString(), this.difficulty as Difficulty)
+    this.quizService.getIsolatedQuestion(this.category.id.toString(), this.difficulty as Difficulty)
     .subscribe(newQuestion => {
       this.canSwapQuestions = false;
       this.questions![questionIndex] = newQuestion;

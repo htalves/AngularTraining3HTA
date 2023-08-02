@@ -12,11 +12,11 @@ import { DataItem } from '../models/data-item.model';
   styleUrls: ['./quiz-maker.component.css']
 })
 export class QuizMakerComponent implements OnInit, OnDestroy {
-
   questions$!: Observable<Question[]>;
 
   private categories: Category[] = [];
   private subCategories: Category[] = [];
+  private unsubscribe = new Subject<void>();
 
   public categoriesDataList: DataItem[] = [];
   public subCategoriesDataList: DataItem[] = [];
@@ -25,7 +25,6 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
   public selectedCategory: Category | null = null;
   public selectedSubCategory: Category | null = null;
   
-  private unsubscribe = new Subject<void>();
   constructor(
     protected quizService: QuizService,
     protected readonly formBuild: FormBuilder,
@@ -41,9 +40,11 @@ export class QuizMakerComponent implements OnInit, OnDestroy {
 
   private subscribeFormHandlers(): void {
     this.formGroup.controls.category.valueChanges
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(guid => this.mainCategoryChanged(guid));
 
     this.formGroup.controls.subCategory.valueChanges
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(guid => this.subCategoryChanged(guid));
   }
 
